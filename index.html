@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <!-- Vue.JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+    <!-- CDNJS :: Sortable (https://cdnjs.com/) -->
+    <script defer src="//cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>
+    <!-- CDNJS :: Vue.Draggable (https://cdnjs.com/) -->
+    <script defer src="//cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js"></script>
+    <script defer src="./assets/js/script.js"></script>
+    <title>Application de vote interactive</title>
+</head>
+<body>
+    <main id="app">
+        <section id="movies" v-if="displayVote">
+            <!-- Input select pour choisir le genre -->
+            <select name="type" id="type" v-model="typeSelected" @change="showMovies(typeSelected.id)">
+                <!-- Boucle sur le tableau des genres -->
+                <option disabled value="">Choisissez une catégorie</option>
+                <option 
+                    v-for="(item, index) in typesList"
+                    :key="item.id"
+                    :value="item"
+                >
+                        {{item.name}}
+                </option>
+            </select>
+            <!-- Elément SORTABLE pour glisser-déposer -->
+            <draggable 
+                :list="moviesList" 
+                group="people" 
+                @start="drag=true" 
+                @end="drag=false"
+            >
+                <!-- Boucle sur le tableau des films -->
+                <div 
+                    v-for="element in moviesList"
+                    :key="element.id"
+                    v-if="displayMovies"
+                >
+                    {{element.title}}
+                </div>
+            </draggable>
+            <button 
+                v-if="displaySubmitButton"
+                type="submit"
+                @click="saveVote"
+            >
+                Terminer le vote
+            </button>
+        </section>
+        <section id="results" v-if="displayResults">
+            <div 
+                v-for="(item, index) in arrayResults"
+            >
+                {{item.title}}
+            </div>
+        </section>
+    </main>
+</body>
+</html>
