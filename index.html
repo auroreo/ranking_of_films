@@ -17,7 +17,7 @@
     <main id="app">
         <section id="movies" v-if="displayVote">
             <!-- Input select pour choisir le genre -->
-            <select name="type" id="type" v-model="typeSelected" @change="showMovies(typeSelected.id)">
+            <select name="type" id="type" v-model="typeSelected" @change="showMovies(typeSelected.id)" @click="checkLocalStorage">
                 <!-- Boucle sur le tableau des genres -->
                 <option disabled value="">Choisissez une catégorie</option>
                 <option 

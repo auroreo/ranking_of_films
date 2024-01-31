@@ -30,10 +30,10 @@ let app = new Vue({
         fetch(`https://api.themoviedb.org/3/genre/movie/list?language=fr&api_key=${KEY}`)
             .then(response => response.json())
             .then(response => this.typesList = response.genres)
-            .catch(err => console.error(err)); 
-        this.checkLocalStorage();
+            .catch(err => console.error(err));
     },
     methods: {
+        // Méthode qui affiche les films selon la catégorie lorsque l'on clique sur celle-ci
         showMovies(id) {
             // Récupération des 20 films du genre sélectionné et trié selon leur popularité sur TMDB
             fetch(`https://api.themoviedb.org/3/discover/movie?include_adult=false&language=fr-FR&sort_by=popularity.desc&with_genres=${id}&page=1&api_key=${KEY}`)
@@ -47,14 +47,21 @@ let app = new Vue({
                 .catch(err => console.error(err));
             this.displaySubmitButton = true;
         },
-        showResults() {
+        // Méthode qui se lance au moment du clique sur le bouton "Terminer le vote"
+        saveVote() {
+            // Ajout d'un item dans le local storage du navigateur : le tableau avec les films classés + nom clé = catégorie
+            localStorage.setItem(this.typeSelected.name, JSON.stringify(this.moviesList));
+            // La section de vote est cachée
+            this.displayVote = false;
+            // Récupération item local storage et stockage dans une variable
+            this.arrayResults = JSON.parse(localStorage.getItem(this.typeSelected.name));
+            // Affichage section résultats
             this.displayResults = true;
         },
-        saveVote() {
-            localStorage.setItem(this.typeSelected.name, JSON.stringify(this.moviesList));
-            this.displayVote = false;
-            this.arrayResults = JSON.parse(localStorage.getItem(this.typeSelected.name));
-            this.showResults();
-        },
+        checkLocalStorage() {
+           if (localStorage.getItem("Fantastique") != null){
+            console.log("toto");
+           }
+        }
     }
 });
