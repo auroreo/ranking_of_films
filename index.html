@@ -15,6 +15,8 @@
 </head>
 <body>
     <main id="app">
+        <h2 class="title">Classement interactif des films par catégorie</h2>
+        <p>Sélectionnez la catégorie pour laquelle vous souhaitez soumettre votre classement personnalisé et déplacez les films selon vos préférences !</p>
         <section id="movies-vote" v-if="displayVote">
             <!-- Input select pour choisir le genre -->
             <!-- Lorsque l'on clique sur une catégorie (onchange), les méthodes showMovies et checkLocalStorage se lancent -->
@@ -36,12 +38,18 @@
                 @start="drag=true" 
                 @end="drag=false"
                 id="draggable"
-                
             >
                 <!-- Boucle sur le tableau des films -->
                 <div class="item-vote" v-for="(element, index) in moviesList" :key="element.id">
-                    <div>{{index+1}}</div>
-                    <img :src="'https://image.tmdb.org/t/p/original/'+element.poster_path" :alt="'Poster du film '+element.title">
+                    <div class="item-vote-top">
+                        <div class="item-vote-img-container">
+                            <img class="img-arrow" src="./assets/img/reshot-icon-left-and-right-arrows-Z5XLT7B8WY.svg" alt="">
+                        </div>
+                        <div class="item-vote-index">{{index+1}}</div>
+                    </div>
+                    <div class="img-container">
+                        <img :src="'https://image.tmdb.org/t/p/original/'+element.poster_path" :alt="'Poster du film '+element.title">
+                    </div>
                     <div class="title">
                         {{element.title}}
                     </div>

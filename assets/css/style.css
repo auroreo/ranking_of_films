@@ -4,9 +4,16 @@ html {
     font-family: 'Poppins';
 }
 
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .title {
     font-family: 'Bebas Neue';
     font-size: 25px;
+    height: 20%;
 }
 
 /* Section */
@@ -14,29 +21,57 @@ html {
     display: flex;
     flex-direction: column;
     gap: 2em;
+    align-items: center;
 }
 
 select {
     padding: 1em;
     font-family: 'Poppins';
+    width: fit-content;
 }
 
-img {
-    width: 250px;
-}
 
 #draggable {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 1em;
+    gap: 2em;
 }
 
+/* Un item de la liste de films */
 .item-vote {
     display: flex;
     flex-direction: column;
-    
-    gap: 0.5em;
     width: calc(100%/6);
     cursor: move;
+}
+
+/* Haut de l'item : image flèches + rang */
+.item-vote-top {
+    display: flex;
+}
+
+/* Taille des éléments du haut de l'item */
+.item-vote-img-container {
+    width: 50%;
+}
+
+/* Haut item : image */
+.img-arrow {
+    width: 30px;
+}
+
+.img-container img {
+    width: 100%;
+    height: 50vh;
+    object-fit: cover;
+}
+
+
+button {
+    padding: 1.5em 2em 1.5em 2em;
+    font-family: 'Poppins';
+    border: none;
+    border-radius: 15px;
+    font-size: 15px;
 }
