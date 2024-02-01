@@ -3,10 +3,6 @@ const KEY = "36549efa33a546a8545b0116b37ad70c";
 // Base URL
 const baseURL = "https://api.themoviedb.org/3";
 
-Vue.component('movie-item', {
-
-})
-
 let app = new Vue({
     el: "#app",
     data: {
@@ -19,11 +15,14 @@ let app = new Vue({
         drag : false,
         // Récupération du genre sélectionné
         typeSelected : "",
+        // Gérer affichage du vote
         displayVote : true,
+        // Gérer affichage du bouton de fin de vote
         displaySubmitButton : false,
+        // Gérer affichage du résultat du vote
         displayResults : true,
+        // Tableau qui récupère le vote enregistré dans le local storage
         arrayResults : [],
-        displayMovies : true,
     },
     mounted() {
        // Récupération genres sur TMDB
@@ -58,9 +57,14 @@ let app = new Vue({
             // Affichage section résultats
             this.displayResults = true;
         },
-        checkLocalStorage() {
-           if (localStorage.getItem("Fantastique") != null){
-            console.log("toto");
+        // Méthode qui se lance lorsque l'on clique sur une catégorie pour vérifier s'il existe un vote enregistré dans le local storage
+        checkLocalStorage() { 
+            if (localStorage.getItem(this.typeSelected.name)){
+                // si c'est le cas, on récupère le vote dans une variable
+                this.arrayResults = JSON.parse(localStorage.getItem(this.typeSelected.name));
+                // on cache le vote et on affiche les résultats
+                this.displayVote = false;
+                this.displayResults = true;
            }
         }
     }

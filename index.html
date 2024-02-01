@@ -15,9 +15,10 @@
 </head>
 <body>
     <main id="app">
-        <section id="movies" v-if="displayVote">
+        <section id="movies-vote" v-if="displayVote">
             <!-- Input select pour choisir le genre -->
-            <select name="type" id="type" v-model="typeSelected" @change="showMovies(typeSelected.id)" @click="checkLocalStorage">
+            <!-- Lorsque l'on clique sur une catégorie (onchange), les méthodes showMovies et checkLocalStorage se lancent -->
+            <select name="type" id="type" v-model="typeSelected" @change="showMovies(typeSelected.id);checkLocalStorage()">
                 <!-- Boucle sur le tableau des genres -->
                 <option disabled value="">Choisissez une catégorie</option>
                 <option 
@@ -34,16 +35,19 @@
                 group="people" 
                 @start="drag=true" 
                 @end="drag=false"
+                id="draggable"
+                
             >
                 <!-- Boucle sur le tableau des films -->
-                <div 
-                    v-for="element in moviesList"
-                    :key="element.id"
-                    v-if="displayMovies"
-                >
-                    {{element.title}}
+                <div class="item-vote" v-for="(element, index) in moviesList" :key="element.id">
+                    <div>{{index+1}}</div>
+                    <img :src="'https://image.tmdb.org/t/p/original/'+element.poster_path" :alt="'Poster du film '+element.title">
+                    <div class="title">
+                        {{element.title}}
+                    </div>
                 </div>
             </draggable>
+            <!-- Affichage du bouton uniquement si displaySubmitButton est sur true et lorsque l'on clique dessus, la méthode saveVote se lance -->
             <button 
                 v-if="displaySubmitButton"
                 type="submit"
@@ -52,7 +56,9 @@
                 Terminer le vote
             </button>
         </section>
+        <!-- Affichage du résultat uniquement si displayResults est true -->
         <section id="results" v-if="displayResults">
+            <!-- Boucle sur le tableau arrayResults qui récupère le vote enregistré dans le local storage -->
             <div 
                 v-for="(item, index) in arrayResults"
             >
