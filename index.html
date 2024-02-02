@@ -14,48 +14,78 @@
     <title>Application de vote interactive</title>
 </head>
 <body>
-    <main id="app">
-        <h2 class="title">Classement interactif des films par catégorie</h2>
-        <p>Sélectionnez la catégorie pour laquelle vous souhaitez soumettre votre classement personnalisé et déplacez les films selon vos préférences !</p>
-        <section id="movies-vote" v-if="displayVote">
-            <!-- Input select pour choisir le genre -->
-            <!-- Lorsque l'on clique sur une catégorie (onchange), les méthodes showMovies et checkLocalStorage se lancent -->
-            <select name="type" id="type" v-model="typeSelected" @change="showMovies(typeSelected.id);checkLocalStorage()">
-                <!-- Boucle sur le tableau des genres -->
-                <option disabled value="">Choisissez une catégorie</option>
+    <header>
+        <img 
+            src="./assets/img/SVG/Fichier 1logo-ranking-of-films.svg" 
+            alt="Logo Ranking of Films"
+        >
+        <h1>
+            Ranking of Films
+        </h1>
+    </header>
+    <main 
+        id="app"
+    >
+        <section 
+            id="films-vote" 
+            v-if="displayVote">
+            <select 
+                name="type" 
+                id="type" 
+                v-model="genreSelected" 
+                @change="showFilms(genreSelected.id);checkLocalStorage()"
+            >
                 <option 
-                    v-for="(item, index) in typesList"
+                    disabled value=""
+                >
+                    Choisissez une catégorie
+                </option>
+                <option 
+                    v-for="(item, index) in genresList"
                     :key="item.id"
                     :value="item"
                 >
                         {{item.name}}
                 </option>
             </select>
-            <!-- Elément SORTABLE pour glisser-déposer -->
             <draggable 
-                :list="moviesList" 
+                :list="filmsList" 
                 group="people" 
                 @start="drag=true" 
                 @end="drag=false"
                 id="draggable"
             >
-                <!-- Boucle sur le tableau des films -->
-                <div class="item-vote" v-for="(element, index) in moviesList" :key="element.id">
-                    <div class="item-vote-top">
-                        <div class="item-vote-img-container">
-                            <img class="img-arrow" src="./assets/img/reshot-icon-left-and-right-arrows-Z5XLT7B8WY.svg" alt="">
+                <div 
+                    class="item-vote" 
+                    v-for="(element, index) in filmsList" 
+                    :key="element.id"
+                >
+                    <div class="item-vote-top"
+                    >
+                        <div 
+                            class="item-vote-img-container"
+                        >
+                            <img 
+                            class="img-arrow" 
+                            src="./assets/img/reshot-icon-left-and-right-arrows-Z5XLT7B8WY.svg" 
+                            alt="Icône flèche déplacement">
                         </div>
-                        <div class="item-vote-index">{{index+1}}</div>
+                        <div 
+                            class="item-vote-index"
+                        >
+                            {{index+1}}
+                        </div>
                     </div>
                     <div class="img-container">
                         <img :src="'https://image.tmdb.org/t/p/original/'+element.poster_path" :alt="'Poster du film '+element.title">
                     </div>
-                    <div class="title">
+                    <div 
+                        class="title"
+                    >
                         {{element.title}}
                     </div>
                 </div>
             </draggable>
-            <!-- Affichage du bouton uniquement si displaySubmitButton est sur true et lorsque l'on clique dessus, la méthode saveVote se lance -->
             <button 
                 v-if="displaySubmitButton"
                 type="submit"
@@ -64,15 +94,25 @@
                 Terminer le vote
             </button>
         </section>
-        <!-- Affichage du résultat uniquement si displayResults est true -->
-        <section id="results" v-if="displayResults">
+        <section id="results" v-if="displayResult">
             <!-- Boucle sur le tableau arrayResults qui récupère le vote enregistré dans le local storage -->
-            <div 
-                v-for="(item, index) in arrayResults"
-            >
-                {{item.title}}
+            <div id="container-results">
+                <div class="item-vote" v-for="(element, index) in arrayResults" :key="element.id">
+                    <div class="item-vote-index ranked">{{index+1}}</div>
+                    <div class="img-container">
+                        <img :src="'https://image.tmdb.org/t/p/original/'+element.poster_path" :alt="'Poster du film '+element.title">
+                    </div>
+                    <div class="title">
+                        {{element.title}}
+                    </div>
+                </div>
+            </div>
+            <div>
+                <button @click="editVote">Modifier</button>
             </div>
         </section>
     </main>
+    <footer>
+    </footer>
 </body>
 </html>
