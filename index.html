@@ -4,14 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./assets/css/style.css">
-    <!-- Vue.JS -->
     <script defer src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
     <!-- CDNJS :: Sortable (https://cdnjs.com/) -->
     <script defer src="//cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>
     <!-- CDNJS :: Vue.Draggable (https://cdnjs.com/) -->
     <script defer src="//cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js"></script>
     <script defer src="./assets/js/script.js"></script>
-    <title>Application de vote interactive</title>
+    <title>Ranking of Films</title>
 </head>
 <body>
     <header>
@@ -25,29 +24,49 @@
     </header>
     <main 
         id="app"
-    >
+    >   
+        <section id="genres-list">
+            <!-- when we select an option (on change), the function showFilms shows the 10 most popular films of the selected category -->
+            <div class="select-genres">
+                <div class="select-container">
+                    <select 
+                        name="type" 
+                        id="type" 
+                        v-model="genreSelected" 
+                        @change="showFilms(genreSelected.id);checkLocalStorage()"
+                    >
+                        <option 
+                            disabled value=""
+                        >
+                            Genres
+                        </option>
+                        <!-- loop on genresList -->
+                        <option 
+                            v-for="(item, index) in genresList"
+                            :key="item.id"
+                            :value="item"
+                        >
+                                {{item.name}}
+                        </option>
+                    </select>
+                </div>
+                <div class="genres-indication">
+                   <img src="./assets/img/arrow-indication.svg" alt=""> 
+                   <p>Choisis un genre !</p>
+                </div>
+                
+            </div>
+        </section>
+        <!-- VOTE SECTION -->
         <section 
             id="films-vote" 
-            v-if="displayVote">
-            <select 
-                name="type" 
-                id="type" 
-                v-model="genreSelected" 
-                @change="showFilms(genreSelected.id);checkLocalStorage()"
-            >
-                <option 
-                    disabled value=""
-                >
-                    Choisissez une catégorie
-                </option>
-                <option 
-                    v-for="(item, index) in genresList"
-                    :key="item.id"
-                    :value="item"
-                >
-                        {{item.name}}
-                </option>
-            </select>
+            v-if="displayVote"
+        >
+            <div class="sort-films">
+                <img src="./assets/img/arrow-indication.svg" alt=""> 
+                <p>Classe les films selon tes préférences !</p>
+            </div>
+            <!-- SORTABLE drag and drop -->
             <draggable 
                 :list="filmsList" 
                 group="people" 
@@ -55,29 +74,92 @@
                 @end="drag=false"
                 id="draggable"
             >
+                <!-- loop on filmsList -->
                 <div 
                     class="item-vote" 
                     v-for="(element, index) in filmsList" 
                     :key="element.id"
                 >
-                    <div class="item-vote-top"
+                    <div class="item-vote-head"
                     >
                         <div 
-                            class="item-vote-img-container"
+                            class="item-vote-logo-container"
                         >
+                            <!-- icon arrow to helps understanding the films can be moved to be ranked -->
                             <img 
-                            class="img-arrow" 
+                            class="logo-arrow" 
                             src="./assets/img/reshot-icon-left-and-right-arrows-Z5XLT7B8WY.svg" 
-                            alt="Icône flèche déplacement">
+                            alt="Icône flèches déplacement">
                         </div>
+                        <!-- position in the list, shows the rank of the film  -->
                         <div 
                             class="item-vote-index"
                         >
                             {{index+1}}
                         </div>
                     </div>
+                    <!-- film poster -->
                     <div class="img-container">
                         <img :src="'https://image.tmdb.org/t/p/original/'+element.poster_path" :alt="'Poster du film '+element.title">
+                    </div>
+                    <!-- film title -->
+                    <h3 
+                        class="title"
+                    >
+                        {{element.title}}
+                </h3>
+                </div>
+            </draggable>
+            <div class="indication-to-vote">
+                <p>Enregistre ton <span class="yellow">ranking</span> !</p>
+                <img src="./assets/img/arrow-indication.svg" alt=""> 
+            </div>
+            <!-- button to submit the vote -->
+            <button 
+                type="submit"
+                @click="saveVote"
+            >
+                Valider mon classement
+            </button>
+        </section>
+        <!-- RESULT SECTION -->
+        <section 
+            id="result" 
+            v-if="displayResult"
+        >
+            <h2>Mon <span class="ranking-typo">RANKING</span> :</h2>
+            <div 
+            id="container-result"
+            >
+                <!-- loop on arrayResult -->
+                <div 
+                    class="item-vote" 
+                    v-for="(element, index) in arrayResult" 
+                    :key="element.id"
+                >
+                    <div class="index-rank-illustration">
+                        <div v-if="index === 0">
+                            <img src="./assets/img/crown-solid-rank1.svg" alt="Logo rank 2">
+                        </div>
+                        <div v-if="index === 1">
+                            <img src="./assets/img/crown-solid-rank2.svg" alt="Logo rang 2">
+                        </div>
+                        <div v-if="index === 2">
+                            <img src="./assets/img/crown-solid-rank3.svg" alt="Logo rang 3">
+                        </div>
+                       <div 
+                            class="item-vote-index ranked"
+                        >
+                            {{index+1}}
+                        </div> 
+                    </div>
+                    <div 
+                        class="img-container-result"
+                    >
+                        <img 
+                            :src="'https://image.tmdb.org/t/p/original/'+element.poster_path" 
+                            :alt="'Poster du film '+element.title"
+                        >
                     </div>
                     <div 
                         class="title"
@@ -85,34 +167,16 @@
                         {{element.title}}
                     </div>
                 </div>
-            </draggable>
-            <button 
-                v-if="displaySubmitButton"
-                type="submit"
-                @click="saveVote"
+            </div>
+            <div class="indication-to-vote">
+                <p>Tu as changé d'avis ?</p>
+                <img src="./assets/img/arrow-indication.svg" alt=""> 
+            </div>
+            <button
             >
-                Terminer le vote
+                Modifier mon vote
             </button>
         </section>
-        <section id="results" v-if="displayResult">
-            <!-- Boucle sur le tableau arrayResults qui récupère le vote enregistré dans le local storage -->
-            <div id="container-results">
-                <div class="item-vote" v-for="(element, index) in arrayResults" :key="element.id">
-                    <div class="item-vote-index ranked">{{index+1}}</div>
-                    <div class="img-container">
-                        <img :src="'https://image.tmdb.org/t/p/original/'+element.poster_path" :alt="'Poster du film '+element.title">
-                    </div>
-                    <div class="title">
-                        {{element.title}}
-                    </div>
-                </div>
-            </div>
-            <div>
-                <button @click="editVote">Modifier</button>
-            </div>
-        </section>
     </main>
-    <footer>
-    </footer>
 </body>
 </html>

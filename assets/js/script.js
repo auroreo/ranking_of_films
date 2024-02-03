@@ -16,9 +16,8 @@ let app = new Vue({
         // Récupération du genre sélectionné
         genreSelected : "",
         // Gérer affichage du vote
-        displayVote : true,
+        displayVote : false,
         // Gérer affichage du bouton de fin de vote
-        displaySubmitButton : false,
         // Gérer affichage du résultat du vote
         displayResult : false,
         // Tableau qui récupère le vote enregistré dans le local storage
@@ -44,7 +43,8 @@ let app = new Vue({
                     this.filmsList.splice(10,10)
                 })
                 .catch(err => console.error(err));
-            this.displaySubmitButton = true;
+            this.displayResult = false;
+            this.displayVote = true;
         },
         // Méthode qui se lance au moment du clique sur le bouton "Terminer le vote"
         saveVote() {
@@ -53,7 +53,7 @@ let app = new Vue({
             // La section de vote est cachée
             this.displayVote = false;
             // Récupération item local storage et stockage dans une variable
-            this.arrayResult = JSON.parse(localStorage.getItem(this.typeSelected.name));
+            this.arrayResult = JSON.parse(localStorage.getItem(this.genreSelected.name));
             // Affichage section résultats
             this.displayResult = true;
         },
