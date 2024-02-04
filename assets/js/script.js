@@ -70,9 +70,6 @@ let app = new Vue({
         editVote() {
             this.displayResult = false;
             this.displayVote = true;
-        },
-        refresh() {
-            location.reload();
         }
     }
 });
