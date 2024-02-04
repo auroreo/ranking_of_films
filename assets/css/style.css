@@ -247,6 +247,8 @@ button {
         transform: rotate(90deg);
         padding-bottom: 20px;
     }
-
+    .img-container-result img {
+        height: 70vh;
+    }
 
 }
