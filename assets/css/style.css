@@ -114,6 +114,11 @@ select {
     width: 50%;
 }
 
+.item-vote-logo-container img {
+    display: flex;
+    align-self: center;
+}
+
 .logo-arrow {
     width: 30px;
 }
@@ -121,6 +126,7 @@ select {
 .item-vote-index {
     font-family: 'Bungee';
     font-size: 20px;
+    align-self: center;
 }
 
 .img-container img {
@@ -207,6 +213,25 @@ button {
 }
 
 @media screen and (max-width: 768px) {
+    header {
+        flex-direction: column;
+        align-items: center;
+    }
+    header h1 {
+        text-align: center;
+        font-size: 40px;
+    }
+    .genres-indication,.sort-films,.indication-to-vote {
+        display: none;
+    }
+    .select-genres {
+        justify-content: center;
+        gap: 0em;
+    }
+    .select-container {
+        margin: 1.5em;
+    }
+
     #draggable {
         flex-direction: column;
         align-items: center;
@@ -218,7 +243,10 @@ button {
         height: 100%;
         width: 100%;
     }
-    .img-arrow {
+    .logo-arrow {
         transform: rotate(90deg);
+        padding-bottom: 20px;
     }
+
+
 }
